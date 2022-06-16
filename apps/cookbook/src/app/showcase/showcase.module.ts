@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { KirbyModule } from '@kirbydesign/designsystem';
 
+import { ModalLazyExampleModule } from '../examples/modal-example/modal-route-example/modal-lazy-example.module';
 import { IphoneModule } from '../iphone/iphone.module';
 import { ApiDescriptionEventsComponent } from '../shared/api-description/api-description-events/api-description-events.component';
 import { ApiDescriptionMethodsComponent } from '../shared/api-description/api-description-methods/api-description-methods.component';
@@ -26,6 +27,7 @@ import { COMPONENT_DECLARATIONS, COMPONENT_EXPORTS, COMPONENT_IMPORTS } from './
     IphoneModule,
     RouterModule,
     CodeViewerModule,
+    ModalLazyExampleModule,
   ],
   declarations: [
     ...COMPONENT_DECLARATIONS,

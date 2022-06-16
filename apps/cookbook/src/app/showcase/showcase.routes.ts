@@ -176,12 +176,10 @@ export const routes: Routes = [
           {
             path: 'page1',
             outlet: 'modal',
-            component: ModalRoutePage1ExampleComponent,
-          },
-          {
-            path: 'page2',
-            outlet: 'modal',
-            component: ModalRoutePage2ExampleComponent,
+            loadChildren: () =>
+              import(
+                '../examples/modal-example/modal-route-example/modal-lazy-example.module'
+              ).then((m) => m.ModalLazyExampleModule),
           },
         ],
       },
