@@ -4,11 +4,14 @@ import { BasePageExampleComponent } from '../base-page-example.component';
 
 const config = {
   template: `<kirby-page
+  (enter)="enter()"
+  (leave)="leave()"
   titleAlignment="center"
   title="Centered Title"
   subtitle="Centered Subtitle"
   toolbarTitle="A Different Title" defaultBackHref="/">
   <kirby-page-content>
+    <button kirby-button routerLink="../simple3">Next Page</button>
     <div [innerHTML]="content"></div>
   </kirby-page-content>
 </kirby-page>`,
@@ -23,5 +26,13 @@ export class PageAlignmentAndToolbarTitleExampleComponent extends BasePageExampl
 
   constructor() {
     super();
+  }
+
+  enter() {
+    console.log('Enter Other');
+  }
+
+  leave() {
+    console.log('Leave  Other');
   }
 }

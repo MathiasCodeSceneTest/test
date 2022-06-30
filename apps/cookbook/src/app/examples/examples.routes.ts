@@ -90,7 +90,25 @@ export const routes: Routes = [
           },
           {
             path: 'simple',
-            component: PageSimpleExampleComponent,
+            children: [
+              {
+                path: '',
+                redirectTo: 'simple1',
+                pathMatch: 'full',
+              },
+              {
+                path: 'simple1',
+                component: PageSimpleExampleComponent,
+              },
+              {
+                path: 'simple2',
+                component: PageAlignmentAndToolbarTitleExampleComponent,
+              },
+              {
+                path: 'simple3',
+                component: PageSimpleExampleComponent,
+              },
+            ],
           },
           {
             path: 'alignment-toolbar-title',
@@ -99,10 +117,6 @@ export const routes: Routes = [
           {
             path: 'fit-heading',
             component: PageFitHeadingExampleComponent,
-          },
-          {
-            path: 'fixed',
-            component: PageFixedTitleAndActionsExampleComponent,
           },
           {
             path: 'fixed-footer',

@@ -27,7 +27,7 @@ import {
 import { NavigationEnd, NavigationStart, Router, RouterEvent } from '@angular/router';
 import { IonBackButtonDelegate, IonContent, IonFooter, IonHeader } from '@ionic/angular';
 import { Observable, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, takeUntil, tap } from 'rxjs/operators';
 
 import { KirbyAnimation } from '../../animation/kirby-animation';
 import { FitHeadingConfig } from '../../directives/fit-heading/fit-heading.directive';
@@ -231,7 +231,7 @@ export class PageComponent
   fixedActionsTemplate: TemplateRef<any>;
   private pageTitleIntersectionObserverRef: IntersectionObserver =
     this.pageTitleIntersectionObserver();
-  private urls: string[] = [];
+  private url: string;
   private hasEntered: boolean;
 
   private ngOnDestroy$ = new Subject();
@@ -243,6 +243,28 @@ export class PageComponent
   private navigationEnd$: Observable<RouterEvent> = this.router.events.pipe(
     takeUntil(this.ngOnDestroy$),
     filter((event: RouterEvent) => event instanceof NavigationEnd)
+  );
+
+  // TODO: Experimental - remove
+  // Experimental navigation observable for page enter and leave
+  private navigationEnterLeave$ = this.router.events.pipe(
+    takeUntil(this.ngOnDestroy$),
+    filter(
+      (event: RouterEvent) =>
+        (event instanceof NavigationEnd && event.urlAfterRedirects === this.url) ||
+        (event instanceof NavigationStart &&
+          event.url !== this.url &&
+          !this.modalNavigationService.isModalRoute(event.url) &&
+          !this.modalNavigationService.isModalRoute(this.url))
+    ),
+    distinctUntilChanged(
+      (prev, curr) => prev instanceof NavigationEnd === curr instanceof NavigationEnd
+    ),
+    // TODO: remove tap
+    // tap((event: RouterEvent) =>
+    //   console.log('URL: ' + (event instanceof NavigationEnd ? event.urlAfterRedirects : event.url))
+    // ),
+    map((event: RouterEvent) => (event instanceof NavigationEnd ? this.onEnter : this.onLeave))
   );
 
   constructor(
@@ -273,21 +295,31 @@ export class PageComponent
   }
 
   ngAfterViewInit(): void {
+    // This instance has observed a page enter
+    this.url = this.router.url;
+    this.onEnter();
+
+    // Watch for navigation events triggering page enter and leave
     this.navigationStart$.subscribe((event: NavigationStart) => {
       if (
-        !this.urls.includes(event.url) &&
-        !this.modalNavigationService.isModalRoute(event.url) &&
-        !this.modalNavigationService.isModalRoute(this.router.url)
+        event.url !== this.url &&
+        !this.modalNavigationService.isModalRoute(this.url) &&
+        !this.modalNavigationService.isModalRoute(event.url)
       ) {
         this.onLeave();
       }
     });
 
     this.navigationEnd$.subscribe((event: NavigationEnd) => {
-      if (this.urls.includes(event.urlAfterRedirects)) {
+      if (event.urlAfterRedirects === this.url) {
         this.onEnter();
       }
     });
+
+    // TODO: Experimental - remove
+    // this.navigationEnterLeave$.subscribe((f) =>
+    //   console.log('#enterleave(' + this.url + '): ' + f.name)
+    // );
 
     this.windowRef.nativeWindow.addEventListener(selectedTabClickEvent, () => {
       this.content.scrollToTop(KirbyAnimation.Duration.LONG);
@@ -297,10 +329,12 @@ export class PageComponent
   }
 
   ngAfterContentChecked(): void {
-    if (!this.urls.includes(this.router.url)) {
-      this.urls.push(this.router.url);
-      this.onEnter();
-    }
+    // TODO: Remove
+    // if (!this.urls.includes(this.router.url)) {
+    //   console.log('ngAfterContentChecked(' + this.urls + ') router.url: ' + this.router.url);
+    //   this.urls.push(this.router.url);
+    //   this.onEnter();
+    // }
 
     this.initializeTitle();
     this.initializeActions();
@@ -335,11 +369,13 @@ export class PageComponent
   }
 
   private onLeave() {
+    if (!this.hasEntered) return;
+    this.hasEntered = false;
+
     this.leave.emit();
     if (this.pageTitle) {
       this.pageTitleIntersectionObserverRef.unobserve(this.pageTitle.nativeElement);
     }
-    this.hasEntered = false;
 
     if (this.tabBarBottomHidden && this.tabsComponent) {
       this.tabsComponent.tabBarBottomHidden = false;

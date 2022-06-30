@@ -1,0 +1,12 @@
+<kirby-page
+  (enter)="enter()"
+  (leave)="leave()"
+  title="Simple Page"
+  subtitle="Subtitle of simple page"
+  defaultBackHref="/"
+>
+  <kirby-page-content>
+    <button kirby-button routerLink="../simple2">Next Page</button>
+    <div [innerHTML]="content"></div>
+  </kirby-page-content>
+</kirby-page>
