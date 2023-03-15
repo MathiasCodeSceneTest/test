@@ -53,6 +53,7 @@ import { DataTableExampleComponent } from './data-table-example/data-table-examp
 import { LoadingOverlayServiceExampleComponent } from './loading-overlay-example/service/loading-overlay-service-example.component';
 import { HeaderWithActionGroupExampleComponent } from './header-example/examples/action-group';
 import { MenuExampleComponent } from './menu-example/menu-example.component';
+import { CarouselExampleComponent } from './carousel-example/carousel-example.component';
 
 export const COMPONENT_DECLARATIONS: any[] = [
   ExamplesComponent,
@@ -111,4 +112,5 @@ export const COMPONENT_DECLARATIONS: any[] = [
   ListExperimentalExampleComponent,
   DataTableExampleComponent,
   MenuExampleComponent,
+  CarouselExampleComponent,
 ];

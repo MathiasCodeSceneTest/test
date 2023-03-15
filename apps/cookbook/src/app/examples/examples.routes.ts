@@ -81,6 +81,7 @@ import { HeaderExampleComponent } from './header-example/header-example.componen
 import { NestedModalsV2ExampleComponent } from './modal-v2-example/nested-modals/nested-modals-v2-example.component';
 import { HeaderWithActionGroupExampleComponent } from './header-example/examples/action-group';
 import { MenuExampleComponent } from './menu-example/menu-example.component';
+import { CarouselExampleComponent } from './carousel-example/carousel-example.component';
 
 export const routes: Routes = [
   {
@@ -538,5 +539,9 @@ export const routes: Routes = [
   {
     path: 'menu',
     component: MenuExampleComponent,
+  },
+  {
+    path: 'carousel',
+    component: CarouselExampleComponent,
   },
 ];
