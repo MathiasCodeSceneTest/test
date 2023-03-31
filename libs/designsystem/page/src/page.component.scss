@@ -223,9 +223,7 @@ ion-content {
     --padding-end: var(--page-content-padding-end, #{utils.size('xxl')});
   }
 
-  &.max-width-standard {
-    --page-content-max-width: 792px;
-  }
+  --page-content-max-width: 792px;
 
   &.max-width-optimized {
     --page-content-max-width: 1092px;
